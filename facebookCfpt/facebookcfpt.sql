@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  mer. 27 jan. 2021 à 15:07
+-- Généré le :  mer. 03 fév. 2021 à 15:03
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.19
 
@@ -33,15 +33,17 @@ CREATE TABLE `media` (
   `typeMedia` text NOT NULL,
   `nomMedia` text NOT NULL,
   `creationDate` timestamp NOT NULL,
-  `modificationDate` timestamp NULL DEFAULT NULL
+  `modificationDate` timestamp NULL DEFAULT NULL,
+  `nomMediaGenere` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `media`
 --
 
-INSERT INTO `media` (`idMedia`, `typeMedia`, `nomMedia`, `creationDate`, `modificationDate`) VALUES
-(12, 'image', 'kekra500.PNG', '2021-01-27 14:03:08', NULL);
+INSERT INTO `media` (`idMedia`, `typeMedia`, `nomMedia`, `creationDate`, `modificationDate`, `nomMediaGenere`) VALUES
+(27, 'image', 'kekra500.PNG', '2021-02-03 13:42:04', NULL, '273351070837145104047kekra500.PNG'),
+(28, 'image', 'Untitled_1.8.1.jpg', '2021-02-03 13:42:04', NULL, '492001399420347131071Untitled_1.8.1.jpg');
 
 -- --------------------------------------------------------
 
@@ -80,7 +82,7 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT pour la table `media`
 --
 ALTER TABLE `media`
-  MODIFY `idMedia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idMedia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT pour la table `post`
 --

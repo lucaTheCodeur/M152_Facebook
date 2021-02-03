@@ -85,7 +85,7 @@
                                                 </div>
                                                 <input type="submit" name="submit" value="Post" class="btn btn-primary pull-right" />
                                                 <ul class="list-inline">
-                                                    <input type="file" name="image" class="form-control-file" id="img" accept=".jpg, .jpeg, .png"/>
+                                                    <input type="file" name="image[]" class="form-control-file" id="img" accept=".jpg, .jpeg, .png" multiple/>
                                                 </ul>
                                             </form>
 
