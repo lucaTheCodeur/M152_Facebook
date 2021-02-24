@@ -19,13 +19,14 @@ $submit = filter_input(INPUT_POST, 'submit');
 $taille_maxi = 3000000;
 $taille = filesize($_FILES['image']['tmp_name']);
 
+
 // Si on clique sur le boutton submit
 if ($submit) {
 	// Verification des extensions
 	// Code image, video et audio
 	// Nombre de fichier total
 	$total = count($_FILES['image']['tmp_name']);
-
+	
 	// Boucle pour tous les fichiers
 	for ($i = 0; $i < $total; $i++) {
 		// Image est égal au fichier selectionné dans le form
