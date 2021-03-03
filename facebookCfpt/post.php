@@ -1,3 +1,9 @@
+<?php
+
+// mode edit
+$edit = filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_NUMBER_INT);
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -77,16 +83,17 @@
 
                                     <div class="well">
 
-                                        <h4>What's New</h4>
+                                        <h4><?= $edit == null ? "What's New" : "Update it !" ?></h4>
 
                                         <form action="facebook.php" method="POST" enctype="multipart/form-data">
                                             <div class="form-group" style="padding:14px;">
-                                                <textarea class="form-control" name="postEcrit" placeholder="Update your status"></textarea>
+                                                <textarea class="form-control" name="postEcrit" placeholder="<?= $edit == null ? "Update your status" : "Update your post" ?>"></textarea>
                                             </div>
-                                            <input type="submit" name="submit" value="Post" class="btn btn-primary pull-right" />
+                                            <input type="submit" name="submit" value="<?= $edit == null ? "Post" : "Update" ?>" class="btn btn-primary pull-right" />
                                             <ul class="list-inline">
                                                 <input type="file" name="image[]" class="form-control-file" id="img" accept=".jpg, .jpeg, .png, .mp4, .mp3, .wav" multiple />
                                             </ul>
+                                            <input type="hidden" name="editOuNon" value="<?= $edit == null ? "" : $edit ?>" />
                                         </form>
 
                                     </div>
@@ -97,7 +104,7 @@
 
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            <h4>Write something here</h4>
+                                            <h4><?= $edit == null ? "Write something here" : "Update your post" ?></h4>
                                         </div>
                                     </div>
                                 </div>

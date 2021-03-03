@@ -9,7 +9,7 @@ include("./inc/header.inc.php");
 $sup = filter_input(INPUT_GET, 'sup', FILTER_SANITIZE_STRING);
 
 // Edition d'un media
-$edit = filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_STRING);
+$edit = filter_input(INPUT_POST, 'editOuNon', FILTER_SANITIZE_NUMBER_INT);
 
 // Initialisation des variables
 $post = filter_input(INPUT_POST, 'postEcrit');
@@ -17,7 +17,7 @@ $submit = filter_input(INPUT_POST, 'submit');
 
 // tailles des images
 $taille_maxi = 3000000;
-$taille = filesize($_FILES['image']['tmp_name']);
+//$taille = filesize($_FILES['image']['tmp_name']);
 
 
 // Si on clique sur le boutton submit
@@ -26,7 +26,7 @@ if ($submit) {
 	// Code image, video et audio
 	// Nombre de fichier total
 	$total = count($_FILES['image']['tmp_name']);
-	
+
 	// Boucle pour tous les fichiers
 	for ($i = 0; $i < $total; $i++) {
 		// Image est égal au fichier selectionné dans le form
@@ -54,7 +54,11 @@ if ($submit) {
 				// Si tout marche, on prend le nom de l'image et on le met dans la bdd
 				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
 					$bdd->beginTransaction();
-					$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					if ($edit == null) {
+						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					} else {
+						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+					}
 					$bdd->commit();
 					header("Location: facebook.php");
 				}
@@ -86,7 +90,11 @@ if ($submit) {
 				// Si tout marche, on prend le nom de l'image et on le met dans la bdd
 				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
 					$bdd->beginTransaction();
-					$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					if ($edit == null) {
+						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					} else {
+						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+					}
 					$bdd->commit();
 					header("Location: facebook.php");
 				}
@@ -118,7 +126,11 @@ if ($submit) {
 				// Si tout marche, on prend le nom de l'image et on le met dans la bdd
 				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
 					$bdd->beginTransaction();
-					$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					if ($edit == null) {
+						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
+					} else {
+						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+					}
 					$bdd->commit();
 					header("Location: facebook.php");
 				}
@@ -127,7 +139,6 @@ if ($submit) {
 			// Sinon la vidéo n'est pas en mp4 ou gif
 			echo "source en wav ou mp3.";
 		}
-
 	}
 }
 
@@ -235,32 +246,38 @@ if ($submit) {
 									<?php
 									// Affiche toutes les images
 									foreach ($medias as $i) {
-										// Supprimer l'image
-										echo "<a style=\"margin:10px; color:red;\" href=\"facebook.php?sup=" . $i["idMedia"] . "\">X</a>";
-										if ($sup == $i["idMedia"]) {
+										if (file_exists("img/" . $i["nomMediaGenere"]) || file_exists("video/" . $i["nomMediaGenere"]) || file_exists("audio/" . $i["nomMediaGenere"])) {
+
+											// Supprimer l'image
+											echo "<a style=\"margin:10px; color:red;\" href=\"facebook.php?sup=" . $i["idMedia"] . "\">X</a>";
+											if ($sup == $i["idMedia"]) {
+												unset($sup);
+
+												if ($i["typeMedia"] == "image")
+													unlink("./img/" . $i["nomMediaGenere"]);
+												if ($i["typeMedia"] == "video")
+													unlink("./video/" . $i["nomMediaGenere"]);
+												if ($i["typeMedia"] == "audio")
+													unlink("./audio/" . $i["nomMediaGenere"]);
+
+												$deleteMedia->execute(array($i["idMedia"]));
+												header("Location: facebook.php");
+												die();
+											}
+
+											// Edition
+											echo "<a style=\"margin:10px; color:blue;\" href=\"post.php?edit=" . $i["idMedia"] . "\">E</a>";
+
+											echo "<div class=\"panel panel-default\">";
 											if ($i["typeMedia"] == "image")
-												unlink("./img/" . $i["nomMediaGenere"]);
+												echo "	<div class=\"panel-thumbnail\"><img src=\"./img/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\"></div>";
 											if ($i["typeMedia"] == "video")
-												unlink("./video/" . $i["nomMediaGenere"]);
+												echo "	<div class=\"panel-thumbnail\"><video autoplay loop muted controls width=\"100%\"><source src=\"./video/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"video/mp4\">Supporte que les vidéos mp4</source></video></div>";
 											if ($i["typeMedia"] == "audio")
-												unlink("./audio/" . $i["nomMediaGenere"]);
+												echo "	<div class=\"panel-thumbnail\"><audio controls width=\"100%\"><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/mp3\">Supporte que les vidéos mp4</source><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/wav\">Supporte que les vidéos mp4</source></video></div>";
+											echo "</div>";
 
-											$deleteMedia->execute(array($sup));
-											header("Location: facebook.php");
 										}
-
-										// Edition
-										echo "<a style=\"margin:10px; color:blue;\" href=\"facebook.php?edit=" . $i["idMedia"] . "\">E</a>";
-
-
-										echo "<div class=\"panel panel-default\">";
-										if ($i["typeMedia"] == "image")
-											echo "	<div class=\"panel-thumbnail\"><img src=\"./img/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\"></div>";
-										if ($i["typeMedia"] == "video")
-											echo "	<div class=\"panel-thumbnail\"><video autoplay loop muted controls width=\"100%\"><source src=\"./video/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"video/mp4\">Supporte que les vidéos mp4</source></video></div>";
-										if ($i["typeMedia"] == "audio")
-											echo "	<div class=\"panel-thumbnail\"><audio controls width=\"100%\"><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/mp3\">Supporte que les vidéos mp4</source><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/wav\">Supporte que les vidéos mp4</source></video></div>";
-										echo "</div>";
 									}
 									?>
 

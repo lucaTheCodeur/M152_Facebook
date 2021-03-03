@@ -18,6 +18,6 @@ $insertMedia = $bdd->prepare('INSERT INTO `media` (`typeMedia`, `nomMedia`, `cre
 $deleteMedia = $bdd->prepare('DELETE FROM `media` WHERE idMedia = ?;');
 
 // Modification dans la bdd
-$modifMedia = $bdd->prepare('UPDATE `media` SET `nomMedia` = ?, modificationDate = ? WHERE `idMedia` = ?;');
+$modifMedia = $bdd->prepare('UPDATE `media` SET typeMedia = ?, `nomMedia` = ?, nomMediaGenere = ?, modificationDate = ? WHERE `idMedia` = ?;');
 
 ?>
