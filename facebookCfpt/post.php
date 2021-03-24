@@ -1,7 +1,11 @@
 <?php
+session_start();
 
 // mode edit
 $edit = filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_NUMBER_INT);
+$name = filter_input(INPUT_GET, 'name');
+
+$_SESSION["prevName"] = $name;
 
 ?>
 <!DOCTYPE html>

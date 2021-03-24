@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 // Faire en sorte d'éviter l'écrasement de fichier en mettant un nom apart dans la bdd et en l'ajoutant à $newFilePath
 
@@ -57,7 +58,23 @@ if ($submit) {
 					if ($edit == null) {
 						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
 					} else {
+						/*// supprime l'ancienne image
+						$selectOnlyName->execute(array($edit));
+						$selectOnlyType->execute(array($edit));
+						$ResultName = $selectOnlyName->fetchAll();
+						$ResultType = $selectOnlyType->fetchAll();
+
+						if ($ResultType == "image")
+							unlink("./img/" . $ResultName);
+						if ($ResultType == "video")
+							unlink("./video/" . $ResultName);
+						if ($ResultType == "audio")
+							unlink("./audio/" . $ResultName);
+						*/
+
+						// update l'ancienne image pour la nouvelle
 						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+						unlink($uploaddir . $_SESSION["prevName"]);
 					}
 					$bdd->commit();
 					header("Location: facebook.php");
@@ -94,6 +111,7 @@ if ($submit) {
 						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
 					} else {
 						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+						unlink($uploaddir . $_SESSION["prevName"]);
 					}
 					$bdd->commit();
 					header("Location: facebook.php");
@@ -130,6 +148,7 @@ if ($submit) {
 						$insertMedia->execute(array($typeMedia, $image,  date('Y-m-d H:i:s'), $nomMediaGenere));
 					} else {
 						$modifMedia->execute(array($typeMedia, $image, $nomMediaGenere, date('Y-m-d H:i:s'), $edit));
+						unlink($uploaddir . $_SESSION["prevName"]);
 					}
 					$bdd->commit();
 					header("Location: facebook.php");
@@ -244,7 +263,7 @@ if ($submit) {
 
 
 									<?php
-									// Affiche toutes les images
+									// Affi-che toutes les images
 									foreach ($medias as $i) {
 										if (file_exists("img/" . $i["nomMediaGenere"]) || file_exists("video/" . $i["nomMediaGenere"]) || file_exists("audio/" . $i["nomMediaGenere"])) {
 
@@ -266,7 +285,7 @@ if ($submit) {
 											}
 
 											// Edition
-											echo "<a style=\"margin:10px; color:blue;\" href=\"post.php?edit=" . $i["idMedia"] . "\">E</a>";
+											echo "<a style=\"margin:10px; color:blue;\" href=\"post.php?edit=" . $i["idMedia"] . "&name=" . $i["nomMediaGenere"] . "\">E</a>";
 
 											echo "<div class=\"panel panel-default\">";
 											if ($i["typeMedia"] == "image")
@@ -276,7 +295,6 @@ if ($submit) {
 											if ($i["typeMedia"] == "audio")
 												echo "	<div class=\"panel-thumbnail\"><audio controls width=\"100%\"><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/mp3\">Supporte que les vidéos mp4</source><source src=\"./audio/" . $i["nomMediaGenere"] . "\" class=\"img-responsive\" type=\"audio/wav\">Supporte que les vidéos mp4</source></video></div>";
 											echo "</div>";
-
 										}
 									}
 									?>

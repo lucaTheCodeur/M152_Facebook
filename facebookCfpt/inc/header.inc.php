@@ -20,4 +20,7 @@ $deleteMedia = $bdd->prepare('DELETE FROM `media` WHERE idMedia = ?;');
 // Modification dans la bdd
 $modifMedia = $bdd->prepare('UPDATE `media` SET typeMedia = ?, `nomMedia` = ?, nomMediaGenere = ?, modificationDate = ? WHERE `idMedia` = ?;');
 
+
+/*$selectOnlyName = $bdd->prepare("SELECT nomMediaGenere FROM media WHERE idMedia = ?;");
+$selectOnlyType = $bdd->prepare("SELECT typeMedia FROM media WHERE idMedia = ?;");*/
 ?>
