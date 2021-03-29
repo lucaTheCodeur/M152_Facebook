@@ -40,7 +40,7 @@ if (isset($_FILES['files']) && !empty($_FILES['files'])) {
 			// Définir le type du média
 			$typeMedia = "image";
 			// Fichier image
-			$uploaddir = './img/';
+			$uploaddir = 'img/';
 
 			$tmpFilePath = $_FILES['files']['tmp_name'][$i];
 
@@ -80,12 +80,12 @@ if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                         array_push($files_arr, $newFilePath);
 					}
 					$bdd->commit();
-					header("Location: facebook.php");
+					//header("Location: facebook.php");
 				}
 			}
 		} else {
 			// Sinon le média n'est pas accepter
-			echo "le média n'est pas accepté.";
+			//echo "le média n'est pas accepté.";
 		}
 		// Video
 		// Verification des extensions
@@ -119,12 +119,12 @@ if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                         array_push($files_arr, $newFilePath);
 					}
 					$bdd->commit();
-					header("Location: facebook.php");
+					//header("Location: facebook.php");
 				}
 			}
 		} else {
 			// Sinon la vidéo n'est pas en mp4 ou gif
-			echo "source en mp4.";
+			//echo "source en mp4.";
 		}
 		// Audio
 		// Verification des extensions
@@ -158,15 +158,16 @@ if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                         array_push($files_arr, $newFilePath);
 					}
 					$bdd->commit();
-					header("Location: facebook.php");
+					//header("Location: facebook.php");
 				}
 			}
 		} else {
 			// Sinon la vidéo n'est pas en mp4 ou gif
-			echo "source en wav ou mp3.";
+			//echo "source en wav ou mp3.";
 		}
 	}
-    echo json_encode($files_arr);
+	//print_r($files_arr);
+	header("Access-Control-Allow-Origin: *");
+	header("Content-Type: application/json");	
+	echo json_encode($files_arr);
 }
-
-?>

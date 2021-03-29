@@ -22,48 +22,55 @@ $_SESSION["prevName"] = $name;
         <![endif]-->
     <link href="assets/css/facebook.css" rel="stylesheet">
     <script type="text/javascript" src="assets/js/jquery.js"></script>
-        <script type="text/javascript" src="assets/js/bootstrap.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('[data-toggle=offcanvas]').click(function() {
-                    $(this).toggleClass('visible-xs text-center');
-                    $(this).find('i').toggleClass('glyphicon-chevron-right glyphicon-chevron-left');
-                    $('.row-offcanvas').toggleClass('active');
-                    $('#lg-menu').toggleClass('hidden-xs').toggleClass('visible-xs');
-                    $('#xs-menu').toggleClass('visible-xs').toggleClass('hidden-xs');
-                    $('#btnShow').toggle();
-                });
+    <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[data-toggle=offcanvas]').click(function() {
+                $(this).toggleClass('visible-xs text-center');
+                $(this).find('i').toggleClass('glyphicon-chevron-right glyphicon-chevron-left');
+                $('.row-offcanvas').toggleClass('active');
+                $('#lg-menu').toggleClass('hidden-xs').toggleClass('visible-xs');
+                $('#xs-menu').toggleClass('visible-xs').toggleClass('hidden-xs');
+                $('#btnShow').toggle();
             });
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function(e) {
-                $('#upload').on('click', function() {
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(e) {
+            $('#upload').on('click', function() {
 
-                    var form_data = new FormData();
-                    var countFiles = document.getElementById('multiFiles').files.length;
+                var form_data = new FormData();
+                var countFiles = document.getElementById('multiFiles').files.length;
 
-                    for (var index = 0; index < countFiles; index++) {
-                        form_data.append("files[]", document.getElementById('multiFiles').files[index]);
+                for (var index = 0; index < countFiles; index++) {
+                    form_data.append("files[]", document.getElementById('multiFiles').files[index]);
+                }
+                $.ajax({
+                    url: 'ajaxUpload.php',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function(response) {
+                        console.log(response);
+
+                        for (var index = 0; index < response.length; index++) {
+                            var src = response[index];
+
+                            $('#preview').append('<img src="' + src + '" width="400px;" height="400px">');
+                        }
+
+                    },
+                    error: function(response) {
+                        console.log(response[0]);
+                        $('#preview').append('<img src="' + response[0] + '" width="400px;" height="400px">');
                     }
-                    $.ajax({
-                        url: 'ajaxUpload.php',
-                        dataType: 'json',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'post',
-                        success: function(response) {
-                            for (var index = 0; index < response.length; index++) {
-                                var src = response[index];
-
-                                $('#preview').append('<img src="' + src + '" width="400px;" height="400px">');
-                            }
-                        },
-                    });
                 });
             });
-        </script>
+        });
+    </script>
 </head>
 
 <body>
@@ -155,11 +162,14 @@ $_SESSION["prevName"] = $name;
                                         </div>
                                     </div>
                                 </div>
+
+                                <div id="preview">
+                                    
+                                </div>
                             </div>
                             <!--/row-->
 
-                            <div id="preview">
-                            </div>
+
 
 
                         </div><!-- /padding -->
